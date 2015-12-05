@@ -1,0 +1,61 @@
+  <tabset justified="true">
+  	<tab heading="Bars" ng-controller="BarsCtrl" active="tab.bars">
+  		<button type="button" class="btn btn-success right" ng-click="goToAdd()">Add</button>
+  		<table class="table table-hover">
+  			<thead>
+  				<tr>
+  					<th>Bars</th>
+  					<th>Address</th>
+  					<th>Category</th>
+  				</tr>
+  			</thead>
+  			<tbody>
+  				<tr ng-repeat="bar in bars" ng-click="goToEdit($index)">
+  					<td>{{bar.name}}</td>
+  					<td>{{bar.address | addressFilter}}</td>
+  					<td>{{bar.category.name}}</td>
+  				</tr>
+  			</tbody>
+  		</table>
+  	</tab>
+	<tab heading="Categories" ng-controller="CategoriesCtrl" active="tab.categories">
+		<button type="button" class="btn btn-success right" ng-click="goToAdd()">Add</button>
+  		<table class="table table-hover">
+  			<thead>
+  				<tr>
+  					<th>Categories</th>
+  				</tr>
+  			</thead>
+  			<tbody>
+  				<tr ng-repeat="category in categories" ng-click="goToEdit($index)">
+  					<td>{{category.name}}</td>
+  				</tr>
+  			</tbody>
+  		</table>
+	</tab>
+	<tab heading="Users" ng-controller="UsersCtrl" active="tab.users">
+    <button type="button" class="btn btn-success right" ng-click="goToAdd()">Add</button>
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Test Account</th>
+            <th>Gender</th>
+            <th>Age</th>
+            <th>Status</th>
+            <th>Tags</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="user in users" ng-click="goToEdit($index)">
+            <td>{{user.name}}</td>
+            <td>{{user.testAccount}}</td>
+            <td>{{user.gender}}</td>
+            <td>{{user.dob | dobFilter}}</td>
+            <td>{{user.status}}</td>
+            <td>{{user.tags}}</td>
+          </tr>
+        </tbody>
+      </table>
+  </tab>
+</tabset>

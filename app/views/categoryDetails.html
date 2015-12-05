@@ -1,0 +1,17 @@
+<form class="form-horizontal" role="form" name="categoryForm" ng-submit="submit(categoryForm.$valid)" novalidate>
+   <p ng-show="categoryForm.name.$invalid && submitted" class="help-block" style="display:block;" >Name is required.</p>
+   <div class="form-group" ng-class="{ 'has-error' : categoryForm.name.$invalid && submitted }">
+      <label for="name" class="col-sm-2 control-label">Name</label>
+      <div class="col-sm-10">
+         <input type="text" name="name" class="form-control" id="name" 
+            placeholder="" ng-model="category.name" required>
+      </div>
+   </div>
+
+   <div>
+   <button type="submit" class="btn btn-primary right">Submit</button>
+   <button type="button" class="btn btn-danger right" ng-if="!addCategory" ng-click="deleteCategory()">Delete</button>
+   <button type="button" class="btn btn-default right" ng-if="addCategory" ng-click="deleteCategory()">Cancel</button>
+</div>
+</form>
+

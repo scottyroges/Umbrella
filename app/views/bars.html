@@ -1,0 +1,394 @@
+<div class="col-sm-6" xmlns="http://www.w3.org/1999/html">
+
+    <div class="row">
+        <label class="col-sm-2">Category: </label>
+
+        <div class="col-sm-3">
+            <select class="form-control" ng-model="category" ng-options="option.name for option in categories"
+                    ng-change="categorySelected()">
+            </select>
+        </div>
+        <label class="col-sm-2">Neighborhood: </label>
+
+        <div class="col-sm-3">
+            <select class="form-control" ng-model="neighborhood" ng-options="option.name for option in neighborhoods"
+                    ng-change="neighborhoodSelected()">
+                <option value="">No Neighborhood</option>
+            </select>
+        </div>
+    </div>
+
+
+    <google-map class="col-sm-12" center="map.center" zoom="map.zoom" draggable='true'>
+
+        <markers id="myMap" models="model" idkey="'mapId'" coords="'location'" events="markersEvents"
+                 doRebuildAll="true">
+            <polygon static="true" ng-repeat="p in polygons track by p.id" path="p.path" stroke="p.stroke"
+                     visible="p.visible"
+                     geodesic="p.geodesic" fill="p.fill" fit="false" editable="p.editable"
+                     draggable="p.draggable"></polygon>
+        </markers>
+
+
+    </google-map>
+</div>
+<div class="col-sm-6" ng-show="barListShow">
+    <div class="row">
+        <button ng-show="mapButtonShow" class="col-sm-2 btn btn-success" ng-click="mapList()">
+            <span class="glyphicon glyphicon-check" style="margin-right: 10px"></span>Map List
+        </button>
+        <button ng-show="!mapButtonShow" class="col-sm-2 btn btn-success" ng-click="mapClear()">
+            <span class="glyphicon glyphicon-unchecked" style="margin-right: 10px"></span>Clear Map
+        </button>
+        <div class="col-sm-1"></div>
+        <div class="col-sm-5">
+            <label>Search: </label>
+            <input id="barSearch" type="text" ng-model="barQuery"/>
+        </div>
+        <button class="col-sm-1 btn" ng-click="refreshBars"><span class="glyphicon glyphicon-refresh"></span></button>
+        <div class="col-sm-1"></div>
+        <button class="col-sm-2 btn btn-primary" ng-click="barAdd()"><span class="glyphicon glyphicon-plus"
+                                                                           style="margin-right: 10px"></span>Add Bar
+        </button>
+    </div>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>Action</th>
+            <th>Bars</th>
+            <th>Neighborhood</th>
+            <th>Category</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="bar in pagedBars">
+            <td style="min-width:130px;">
+                <button class="btn btn-success btn-xs" ng-click="barShow(bar)"><span
+                        ng-class="bar.show ? 'glyphicon glyphicon-check' : 'glyphicon glyphicon-unchecked'"></span>
+                </button>
+                <button class="btn btn-warning btn-xs" ng-click="barEdit(bar)"><span
+                        class="glyphicon glyphicon-edit"></span></button>
+                <button class="btn btn-danger btn-xs" ng-click="barDelete(bar)"><span
+                        class="glyphicon glyphicon-remove"></span></button>
+                <button class="btn btn-info btn-xs" ng-click="barInfo(bar)"><span
+                        class="glyphicon glyphicon-info-sign"></span></button>
+
+            </td>
+            <td ng-click="barDetails(bar)">{{bar.name}}</td>
+            <td ng-click="barDetails(bar)">{{bar.neighborhood.name}}</td>
+            <td ng-click="barDetails(bar)">{{bar.category.name}}</td>
+        </tr>
+        </tbody>
+
+    </table>
+    <div>
+        <label>Total Items: </label>{{totalItems}}
+    </div>
+    <div>
+        <pagination boundary-links="true" total-items="totalItems" items-per-page="itemsPerPage" max-size="5"
+                    ng-model="currentPage"></pagination>
+    </div>
+</div>
+<div class="col-sm-6" ng-show="barAddShow">
+    <div class="row">
+        <button class="btn btn-default" ng-click="barList()">List All Bars</button>
+        <button class="btn btn-default" ng-click="barList()">Cancel</button>
+        <button class="btn btn-default" ng-click="barAddSave(barAddForm.$valid)">Save</button>
+    </div>
+    <div class="row" style="margin-top: 30px">
+        <form class="col-sm-12 form-horizontal" role="form" name="barAddForm" novalidate>
+            <p ng-show="barAddForm.name.$invalid && barAddSubmitted" class="help-block" style="display:block;">Name is
+                required.</p>
+
+            <div class="form-group" ng-class="{ 'has-error' : barAddForm.name.$invalid && barAddSubmitted }">
+                <label for="name" class="col-sm-2 control-label">Name</label>
+
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="name"
+                           name="name" placeholder="" ng-model="add.bar.name" required>
+                </div>
+            </div>
+            <p ng-show="barAddForm.street.$invalid && barAddSubmitted" class="help-block" style="display:block;">Street is
+                required.</p>
+
+            <div class="form-group" ng-class="{ 'has-error' : barAddForm.street.$invalid && barAddSubmitted }">
+                <label for="street" class="col-sm-2 control-label">Street</label>
+
+                <div class="col-sm-10">
+                    <input type="text" name="street" class="form-control" id="street"
+                           placeholder="" ng-model="add.bar.address.street" required>
+                </div>
+            </div>
+
+            <p ng-show="barAddForm.city.$invalid && barAddSubmitted" class="help-block" style="display:block;">City is
+                required.</p>
+
+            <div class="form-group" ng-class="{ 'has-error' : barAddForm.city.$invalid && barAddSubmitted }">
+                <label for="city" class="col-sm-2 control-label">City</label>
+
+                <div class="col-sm-10">
+                    <input type="text" name="city" class="form-control" id="city"
+                           placeholder="" ng-model="add.bar.address.city" required>
+                </div>
+            </div>
+
+            <p ng-show="barAddForm.state.$invalid && barAddSubmitted" class="help-block" style="display:block;">State is
+                required.</p>
+
+            <div class="form-group" ng-class="{ 'has-error' : barAddForm.state.$invalid && barAddSubmitted }">
+                <label for="state" class="col-sm-2 control-label">State</label>
+
+                <div class="col-sm-10">
+                    <input type="text" name="state" class="form-control" id="state"
+                           placeholder="" ng-model="add.bar.address.state" required>
+                </div>
+            </div>
+
+            <p ng-show="barAddForm.zipcode.$invalid && barAddSubmitted" class="help-block" style="display:block;">Zipcode is
+                required.</p>
+
+            <div class="form-group" ng-class="{ 'has-error' : barAddForm.zipcode.$invalid && barAddSubmitted }">
+                <label for="zipcode" class="col-sm-2 control-label">Zipcode</label>
+
+                <div class="col-sm-10">
+                    <input type="text" name="zipcode" class="form-control" id="zipcode"
+                           placeholder="" ng-model="add.bar.address.zipcode" required>
+                </div>
+            </div>
+
+            <button class="col-sm-12 btn" style="margin-bottom: 20px;"ng-click="findLocation()">Lookup</button>
+
+            <p ng-show="barAddNoNeighborhood && barAddSubmitted" class="help-block" style="display:block;">Neighborhood is required. Trying hitting Lookup</p>
+            <div class="form-group" ng-class="{ 'has-error' : barAddNoNeighborhood && barAddSubmitted }">
+                <label class="col-sm-2 control-label">Neighborhood</label>
+
+                <div class="col-sm-10">
+                    <p class="form-control-static">{{add.bar.neighborhood.name}}</p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Category</label>
+
+                <div class="col-sm-10">
+                    <p class="form-control-static">{{category.name}}</p>
+                </div>
+            </div>
+
+            <p ng-show="barAddNoLatitude && barAddSubmitted" class="help-block" style="display:block;">Latitude is required. Trying hitting Lookup</p>
+            <div class="form-group" ng-class="{ 'has-error' : barAddNoLatitude && barAddSubmitted }">
+                <label class="col-sm-2 control-label">Latitude</label>
+
+                <div class="col-sm-10">
+                    <p class="form-control-static">{{add.bar.location.latitude}}</p>
+                </div>
+            </div>
+
+            <p ng-show="barAddNoLongitude && barAddSubmitted" class="help-block" style="display:block;">Longitude is required. Trying hitting Lookup</p>
+            <div class="form-group" ng-class="{ 'has-error' : barAddNoLongitude && barAddSubmitted }">
+                <label class="col-sm-2 control-label">Longitude</label>
+
+                <div class="col-sm-10">
+                    <p class="form-control-static">{{add.bar.location.longitude}}</p>
+                </div>
+            </div>
+
+            <!--<p ng-show="barForm.category.$invalid && submitted" class="help-block" style="display:block;" >Category is required.</p>-->
+            <!--<div class="form-group" ng-class="{ 'has-error' : barForm.category.$invalid && submitted }">-->
+            <!--<label for="category" class="col-sm-2 control-label">Category</label>-->
+            <!--<div class="col-sm-10">-->
+            <!--<select id="category" class="form-control" name="category" ng-model="details.bar.category" ng-options="category.name for category in categories track by category.name" required></select>-->
+            <!--</div>-->
+            <!--</div>-->
+
+            <!--<p ng-show="barForm.latitude.$invalid && submitted" class="help-block" style="display:block;" >Latitude is required.</p>-->
+            <!--<div class="form-group" ng-class="{ 'has-error' : barForm.latitude.$invalid && submitted }">-->
+            <!--<label for="latitude" class="col-sm-2 control-label">Latitude</label>-->
+            <!--<div class="col-sm-10">-->
+            <!--<input type="text" name="latitude" class="form-control" id="latitude"-->
+            <!--placeholder="" ng-model="details.bar.location.latitude" required>-->
+            <!--</div>-->
+            <!--</div>-->
+
+            <!--<p ng-show="barForm.longitude.$invalid && submitted" class="help-block" style="display:block;" >Longitude is required.</p>-->
+            <!--<div class="form-group" ng-class="{ 'has-error' : barForm.longitude.$invalid && submitted }">-->
+            <!--<label for="longitude" class="col-sm-2 control-label">Longitude</label>-->
+            <!--<div class="col-sm-10">-->
+            <!--<input type="text" name="longitude" class="form-control" id="longitude"-->
+            <!--placeholder="" ng-model="details.bar.location.longitude" required>-->
+            <!--</div>-->
+            <!--</div>-->
+        </form>
+    </div>
+</div>
+
+<div class="col-sm-6" ng-show="barEditShow">
+    <div class="row">
+        <button class="btn btn-default" ng-click="barList()">List All Bars</button>
+        <button class="btn btn-default" ng-click="barDetails(details.bar)">Cancel</button>
+        <button class="btn btn-default" ng-click="barEditSave(barEditForm.$valid)">Save</button>
+    </div>
+    <div class="row" style="margin-top: 30px">
+        <form class="col-sm-12 form-horizontal" role="form" name="barEditForm"
+              novalidate>
+            <p ng-show="barEditForm.name.$invalid && barEditSubmitted" class="help-block" style="display:block;">Name is
+                required.</p>
+
+            <div class="form-group" ng-class="{ 'has-error' : barEditForm.name.$invalid && barEditSubmitted }">
+                <label for="name" class="col-sm-2 control-label">Name</label>
+
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="name"
+                           name="name" placeholder="" ng-model="details.bar.name" required>
+                </div>
+            </div>
+            <p ng-show="barEditForm.street.$invalid && barEditSubmitted" class="help-block" style="display:block;">Street is
+                required.</p>
+
+            <div class="form-group" ng-class="{ 'has-error' : barEditForm.street.$invalid && barEditSubmitted }">
+                <label for="street" class="col-sm-2 control-label">Street</label>
+
+                <div class="col-sm-10">
+                    <input type="text" name="street" class="form-control" id="street"
+                           placeholder="" ng-model="details.bar.address.street" required>
+                </div>
+            </div>
+
+            <p ng-show="barEditForm.city.$invalid && barEditSubmitted" class="help-block" style="display:block;">City is
+                required.</p>
+
+            <div class="form-group" ng-class="{ 'has-error' : barEditForm.city.$invalid && barEditSubmitted }">
+                <label for="city" class="col-sm-2 control-label">City</label>
+
+                <div class="col-sm-10">
+                    <input type="text" name="city" class="form-control" id="city"
+                           placeholder="" ng-model="details.bar.address.city" required>
+                </div>
+            </div>
+
+            <p ng-show="barEditForm.state.$invalid && barEditSubmitted" class="help-block" style="display:block;">State is
+                required.</p>
+
+            <div class="form-group" ng-class="{ 'has-error' : barEditForm.state.$invalid && barEditSubmitted }">
+                <label for="state" class="col-sm-2 control-label">State</label>
+
+                <div class="col-sm-10">
+                    <input type="text" name="state" class="form-control" id="state"
+                           placeholder="" ng-model="details.bar.address.state" required>
+                </div>
+            </div>
+
+            <p ng-show="barEditForm.zipcode.$invalid && barEditSubmitted" class="help-block" style="display:block;">Zipcode is
+                required.</p>
+
+            <div class="form-group" ng-class="{ 'has-error' : barEditForm.zipcode.$invalid && barEditSubmitted }">
+                <label for="zipcode" class="col-sm-2 control-label">Zipcode</label>
+
+                <div class="col-sm-10">
+                    <input type="text" name="zipcode" class="form-control" id="zipcode"
+                           placeholder="" ng-model="details.bar.address.zipcode" required>
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Neighborhood</label>
+
+                <div class="col-sm-10">
+                    <p class="form-control-static">{{details.bar.neighborhood.name}}</p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Category</label>
+
+                <div class="col-sm-10">
+                    <p class="form-control-static">{{details.bar.category.name}}</p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Latitude</label>
+
+                <div class="col-sm-10">
+                    <p class="form-control-static">{{details.bar.location.latitude}}</p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Longitude</label>
+
+                <div class="col-sm-10">
+                    <p class="form-control-static">{{details.bar.location.longitude}}</p>
+                </div>
+            </div>
+
+            <!--<p ng-show="barForm.category.$invalid && submitted" class="help-block" style="display:block;" >Category is required.</p>-->
+            <!--<div class="form-group" ng-class="{ 'has-error' : barForm.category.$invalid && submitted }">-->
+            <!--<label for="category" class="col-sm-2 control-label">Category</label>-->
+            <!--<div class="col-sm-10">-->
+            <!--<select id="category" class="form-control" name="category" ng-model="details.bar.category" ng-options="category.name for category in categories track by category.name" required></select>-->
+            <!--</div>-->
+            <!--</div>-->
+
+            <!--<p ng-show="barForm.latitude.$invalid && submitted" class="help-block" style="display:block;" >Latitude is required.</p>-->
+            <!--<div class="form-group" ng-class="{ 'has-error' : barForm.latitude.$invalid && submitted }">-->
+            <!--<label for="latitude" class="col-sm-2 control-label">Latitude</label>-->
+            <!--<div class="col-sm-10">-->
+            <!--<input type="text" name="latitude" class="form-control" id="latitude"-->
+            <!--placeholder="" ng-model="details.bar.location.latitude" required>-->
+            <!--</div>-->
+            <!--</div>-->
+
+            <!--<p ng-show="barForm.longitude.$invalid && submitted" class="help-block" style="display:block;" >Longitude is required.</p>-->
+            <!--<div class="form-group" ng-class="{ 'has-error' : barForm.longitude.$invalid && submitted }">-->
+            <!--<label for="longitude" class="col-sm-2 control-label">Longitude</label>-->
+            <!--<div class="col-sm-10">-->
+            <!--<input type="text" name="longitude" class="form-control" id="longitude"-->
+            <!--placeholder="" ng-model="details.bar.location.longitude" required>-->
+            <!--</div>-->
+            <!--</div>-->
+        </form>
+    </div>
+</div>
+<div class="col-sm-6" ng-show="barDetailsShow">
+    <div class="row">
+        <button class="col-sm-2 btn btn-default" ng-click="barList()">List All Bars</button>
+        <div class="col-sm-2"></div>
+        <!-- todo:issues with bar show in the details page -->
+        <button class="col-sm-2 btn btn-success" ng-click="barShow(details.bar)"><span
+                ng-class="details.bar.show ? 'glyphicon glyphicon-check' : 'glyphicon glyphicon-unchecked'"></span>Show
+            Bar
+        </button>
+        <button class="col-sm-2 btn btn-warning" ng-click="barEdit(details.bar)"><span
+                class="glyphicon glyphicon-edit"></span>Edit Bar
+        </button>
+        <button class="col-sm-2 btn btn-danger" ng-click="barDelete(details.bar)"><span
+                class="glyphicon glyphicon-remove"></span>Delete Bar
+        </button>
+        <button class="col-sm-2 btn btn-info" ng-click="barInfo(details.bar)"><span
+                class="glyphicon glyphicon-info-sign"></span>Bar Info
+        </button>
+
+    </div>
+    <div class="row" style="margin-top: 30px">
+        <label>Name: </label>{{details.bar.name}}
+    </div>
+    <div class="row">
+        <label>Address: </label>{{details.bar.address.street + " , " + details.bar.address.city + " , " +
+        details.bar.address.state + " " + details.bar.address.zipcode}}
+    </div>
+    <div class="row">
+        <label>Neighborhood: </label>{{details.bar.neighborhood.name}}
+    </div>
+    <div class="row">
+        <label>Category: </label>{{details.bar.category.name}}
+    </div>
+    <div class="row">
+        <label>Location: </label>{{details.bar.location.latitude + " , " + details.bar.location.longitude}}
+    </div>
+</div>
+
+
+
+

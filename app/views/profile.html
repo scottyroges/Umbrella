@@ -1,0 +1,131 @@
+<div class="btn-group pull-right" dropdown is-open="status.isopen">
+    <button type="button" class="btn btn-primary dropdown-toggle">
+        Actions<span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu" role="menu">
+        <li ng-click="goToEditProfile()"><a>Edit Profile</a></li>
+        <li ng-click="goToChangePassword()"><a>Change Password</a></li>
+    </ul>
+</div>
+</br>
+</br>
+<form ng-show="!changepassword" class="form-horizontal" role="form" name="userForm" ng-submit="submit(userForm.$valid)" novalidate>
+
+    <p ng-show="userForm.name.$invalid && submitted" class="help-block" style="display:block;">Name is required.</p>
+
+    <div class="form-group" ng-class="{ 'has-error' : userForm.name.$invalid && submitted }">
+        <label for="name" class="col-sm-2 control-label">Name</label>
+
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="name" name="name" ng-model="user.name" required>
+        </div>
+    </div>
+
+    <p ng-show="userForm.email.$invalid && submitted" class="help-block" style="display:block;">Email is required.</p>
+
+    <div ng-show="!user.testAccount" class="form-group"
+         ng-class="{ 'has-error' : userForm.email.$invalid && submitted }">
+        <label for="email" class="col-sm-2 control-label">Email</label>
+
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="email" name="email" ng-model="user.auth.email"
+                   ng-required="!user.testAccount">
+        </div>
+    </div>
+
+    <p ng-show="userForm.gender.$invalid && submitted" class="help-block" style="display:block;">Gender is required.</p>
+
+    <div class="form-group" ng-class="{ 'has-error' : userForm.gender.$invalid && submitted }">
+        <label for="gender" class="col-sm-2 control-label">Gender</label>
+
+        <div class="col-sm-10">
+            <select type="text" name="gender" class="form-control" id="gender"
+                    placeholder="" ng-model="user.gender"
+                    ng-options="option.value as option.name for option in [{ name: 'Male', value: 'male' }, { name: 'Female', value: 'female' }]"
+                    required>
+            </select>
+        </div>
+    </div>
+
+    <p ng-show="(userForm.day.$invalid || userForm.month.$invalid || userForm.year.$invalid) && submitted"
+       class="help-block" style="display:block;">Date of Birth is required.</p>
+
+    <div class="form-group" class="form-group"
+         ng-class="{ 'has-error' : (userForm.day.$invalid || userForm.month.$invalid || userForm.year.$invalid) && submitted }">
+        <label for="dob" class="col-sm-2 control-label">Date of Birth</label>
+
+        <div id="dob" class="col-sm-10">
+            <select type="text" name="month" class="form-control" id="month" placeholder="12" ng-model="user.dob.month"
+                    ng-options="n for n in [] | range:1:13" required>
+            </select>
+            <select type="text" name="day" class="form-control" id="day" placeholder="31" ng-model="user.dob.day"
+                    ng-options="n for n in [] | range:1:32" required>
+            </select>
+            <select type="text" name="year" class="form-control" id="year" placeholder="2014" ng-model="user.dob.year"
+                    ng-options="n for n in [] | range:2014:1914" required>
+            </select>
+        </div>
+    </div>
+
+    <p ng-show="userForm.status.$invalid && submitted" class="help-block" style="display:block;">Status is required.</p>
+
+    <div class="form-group" ng-class="{ 'has-error' : userForm.status.$invalid && submitted }">
+        <label for="status" class="col-sm-2 control-label">Status</label>
+
+        <div class="col-sm-10">
+            <select type="text" name="status" class="form-control" id="status"
+                    placeholder="" ng-model="user.status"
+                    ng-options="option.value as option.name for option in [{ name: 'Single', value: 'single' }, { name: 'Relationship', value: 'relationship' }, { name: 'Married', value : 'married'}]"
+                    required>
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="tags" class="col-sm-2 control-label">Tags</label>
+
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="tags"
+                   placeholder="" ng-model="user.tags">
+        </div>
+    </div>
+
+    <div>
+        <button type="submit" class="btn btn-primary right">Submit</button>
+        <button type="button" class="btn btn-default pull-left" ng-click="cancel()">Cancel</button>
+    </div>
+
+</form>
+<form ng-show="changepassword" class="form-horizontal" role="form" name="changePasswordForm" ng-submit="submit(changePasswordForm.$valid)" novalidate>
+    <p ng-show="changePasswordForm.oldpassword.$invalid && submitted" class="help-block" style="display:block;" >Old Password is required.</p>
+    <div class="form-group" ng-class="{ 'has-error' : changePasswordForm.oldpassword.$invalid && submitted }">
+        <label for="password" class="col-sm-2 control-label">Old Password</label>
+
+        <div class="col-sm-10">
+            <input type="password" name="oldpassword" class="form-control" id="oldpassword"
+                   placeholder="" ng-model="password.old" required>
+        </div>
+    </div>
+    <p ng-show="changePasswordForm.password.$invalid && submitted" class="help-block" style="display:block;" > New Password is required.</p>
+    <div class="form-group" ng-class="{ 'has-error' : changePasswordForm.password.$invalid && submitted }">
+        <label for="password" class="col-sm-2 control-label">New Password</label>
+
+        <div class="col-sm-10">
+            <input type="password" name="password" class="form-control" id="password"
+                   placeholder="" ng-model="password.new" required>
+        </div>
+    </div>
+    <p ng-show="password.re !== password.new && submitted" class="help-block" style="display:block;" >Passwords must match</p>
+    <div class="form-group" ng-class="{ 'has-error' : password.re !== password.new && submitted }">
+        <label for="password" class="col-sm-2 control-label">Re Enter Password</label>
+
+        <div class="col-sm-10">
+            <input type="password" name="password" class="form-control" id="repassword"
+                   placeholder="" ng-model="password.re" required>
+        </div>
+    </div>
+    <div>
+        <button type="submit" class="btn btn-primary right">Submit</button>
+        <button type="button" class="btn btn-default pull-left" ng-click="cancel()">Cancel</button>
+    </div>
+</form>
+

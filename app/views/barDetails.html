@@ -1,0 +1,63 @@
+<form class="form-horizontal" role="form" name="barForm" ng-submit="submit(barForm.$valid)" novalidate>
+
+   <p ng-show="barForm.name.$invalid && submitted" class="help-block" style="display:block;" >Name is required.</p>
+   <div class="form-group" ng-class="{ 'has-error' : barForm.name.$invalid && submitted }">
+      <label for="name" class="col-sm-2 control-label">Name</label>
+      <div class="col-sm-10">
+         <input type="text" class="form-control" id="name" 
+            name="name" placeholder="" ng-model="bar.name" required>
+      </div>
+   </div>
+
+<p ng-show="barForm.street.$invalid && submitted" class="help-block" style="display:block;" >Street is required.</p>
+   <div class="form-group" ng-class="{ 'has-error' : barForm.street.$invalid && submitted }">
+      <label for="street" class="col-sm-2 control-label">Street</label>
+      <div class="col-sm-10">
+         <input type="text" name="street" class="form-control" id="street" 
+            placeholder="" ng-model="bar.address.street" required>
+      </div>
+   </div>
+
+   <p ng-show="barForm.city.$invalid && submitted" class="help-block" style="display:block;" >City is required.</p>
+   <div class="form-group" ng-class="{ 'has-error' : barForm.city.$invalid && submitted }">
+      <label for="city" class="col-sm-2 control-label">City</label>
+      <div class="col-sm-10">
+         <input type="text" name="city" class="form-control" id="city" 
+            placeholder="" ng-model="bar.address.city" required>
+      </div>
+   </div>
+
+<p ng-show="barForm.state.$invalid && submitted" class="help-block" style="display:block;" >State is required.</p>
+   <div class="form-group" ng-class="{ 'has-error' : barForm.state.$invalid && submitted }">
+      <label for="state" class="col-sm-2 control-label">State</label>
+      <div class="col-sm-10">
+         <input type="text" name="state" class="form-control" id="state" 
+            placeholder="" ng-model="bar.address.state" required>
+      </div>
+   </div>
+
+<p ng-show="barForm.zipcode.$invalid && submitted" class="help-block" style="display:block;" >Zipcode is required.</p>
+   <div class="form-group" ng-class="{ 'has-error' : barForm.zipcode.$invalid && submitted }">
+      <label for="zipcode" class="col-sm-2 control-label">Zipcode</label>
+      <div class="col-sm-10">
+         <input type="text" name="zipcode" class="form-control" id="zipcode" 
+            placeholder="" ng-model="bar.address.zipcode" required>
+      </div>
+   </div>
+
+
+<p ng-show="barForm.category.$invalid && submitted" class="help-block" style="display:block;" >Category is required.</p>
+   <div class="form-group" ng-class="{ 'has-error' : barForm.category.$invalid && submitted }">
+      <label for="category" class="col-sm-2 control-label">Category</label>
+      <div class="col-sm-10">        
+         <select class="form-control" name="category" ng-model="bar.category" ng-options="category.name for category in categories track by category.name" required></select>
+      </div>
+   </div>
+
+   <div>
+   <button type="submit" class="btn btn-primary right">Submit</button>
+   <button type="button" class="btn btn-danger right" ng-if="!addBar" ng-click="deleteBar()">Delete</button>
+   <button type="button" class="btn btn-default right" ng-if="addBar" ng-click="deleteBar()">Cancel</button>
+</div>
+</form>
+

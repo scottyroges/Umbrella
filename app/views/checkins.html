@@ -1,0 +1,84 @@
+<div class="col-sm-12 ">
+    <button class="btn pull-left" ng-click="addCheckins()">Add</button>
+    <input type="datetime-local" ng-model="datetime"/>
+    <!--<input type="datetime-local" id="exampleInput" name="input" ng-model="value"-->
+           <!--placeholder="yyyy-MM-ddTHH:mm:ss" min="2001-01-01T00:00:00" max="2013-12-31T00:00:00" required />-->
+</div>
+
+
+<div class="col-sm-6" style="display: inline">
+    <div class="col-sm-12">
+        <div class="col-sm-6 " style="display: inline-block;">
+            <label>Users</label>
+            </br>
+            <div ng-repeat="user in selectedUser">
+                <label>{{user.name}}</label>
+                </br>
+            </div>
+
+        </div>
+
+        <div class="col-sm-6 " style="display: inline-block;">
+            <label>Bars</label>
+            </br>
+            <div>
+                <label>{{selectedBar.name}}</label>
+                </br>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-12">
+        <div class="col-sm-6 " style="display: inline">
+            <input id="userSearch" type="text" ng-model="userSearch.$">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Select</th>
+                    <th>User</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="user in users | filter:userSearch">
+                    <td><input type="checkbox" ng-model="user.selected" ng-change="userSelected(user)"/></td>
+                    <td>{{user.name}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-sm-6 " style="display: inline">
+            <input id="barSearch" type="text" ng-model="barSearch.$">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Select</th>
+                    <th>Bar</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="bar in bars | filter:barSearch | limitTo:100">
+                    <td><input type="checkbox" ng-model="bar.selected" ng-change="barSelected(bar)"/></td>
+                    <td>{{bar.name}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="col-sm-6">
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>User</th>
+            <th>Bar</th>
+            <th>Date</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="checkin in checkins | orderBy:'datetime':true">
+            <td>{{checkin.user.name}}</td>
+            <td>{{checkin.bar.name}}</td>
+            <td>{{checkin.datetime}}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>

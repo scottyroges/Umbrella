@@ -1,0 +1,10 @@
+<div class="header" ng-controller="NavbarCtrl">
+  <ul class="nav nav-pills pull-right">
+    <li ng-repeat="item in menu" ng-class="{active: isActive(item.link)}">
+        <a ng-href="#{{item.link}}">{{item.title}}</a>
+    </li>
+  </ul>
+  <h3 class="text-muted">Umbrella</h3>
+  <button class="btn pull-right" ng-click="logout()">Logout</button>
+  <p ng-click="openProfile()">Curent User: {{top.profile.name}}</p>
+</div>

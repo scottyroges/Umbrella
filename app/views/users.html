@@ -1,0 +1,526 @@
+<div class="row">
+    <div class="col-sm-1"></div>
+    <div class="col-sm-10" style="border: 1px #000000 solid">
+        <div class="row" style="margin-bottom: 20px">
+            <div class="col-sm-12">
+                <h4>Create Users</h4>
+            </div>
+        </div>
+        <div class="row" style="margin-bottom: 20px">
+            <form class="form-inline">
+                <div class="col-xs-12 col-md-3 form-group">
+                    <div class="col-xs-3">
+                        <label for="gender">Gender</label>
+                    </div>
+                    <div class="col-xs-5">
+                        <select class="form-control" ng-model="gender"
+                                ng-options="option.value as option.name for option in [{ name: 'Female', value: 'female' }, { name: 'Male', value: 'male' }]"></select>
+                    </div>
+                    <div class="col-xs-4">
+                        <input type="text" class="form-control"/>
+                    </div>
+
+                </div>
+                <div class="col-xs-12 col-md-3 form-group">
+                    <div class="col-xs-3">
+                        <label for="status">Status</label>
+                    </div>
+                    <div class="col-xs-5">
+                        <select class="form-control" ng-model="gender"
+                                ng-options="option.value as option.name for option in [{ name: 'Single', value: 'single' }, { name: 'Relationship', value: 'relationship' }, { name: 'Married', value: 'married' }]"></select>
+                    </div>
+                    <div class="col-xs-4">
+                        <input type="text" class="form-control"/>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-md-3 form-group">
+                    <div class="col-xs-4">
+                        <label for="orientation">Orientation</label>
+                    </div>
+                    <div class="col-xs-4">
+                        <select class="form-control" ng-model="gender"
+                                ng-options="option.value as option.name for option in [{ name: 'Straight', value: 'straight' }, { name: 'Gay', value: 'gay' },{ name: 'Bi', value: 'bi' }]"></select>
+                    </div>
+                    <div class="col-xs-4">
+                        <input type="text" class="form-control"/>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-md-3 form-group">
+                    <div class="col-xs-3">
+                        <label for="age">Age</label>
+                    </div>
+                    <div class="col-xs-5">
+                        <select class="form-control" ng-model="gender"
+                                ng-options="option for option in ['20-25','25-30','30-40','40+']"></select>
+                    </div>
+                    <div class="col-xs-4">
+                        <input type="text" class="form-control"/>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="row" style="margin-bottom: 20px">
+            <div class="col-xs-12">
+                <button class="btn btn-default pull-right" ng-click="userCreater()">Create</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-1"></div>
+</div>
+<div ng-show="userListShow" class="row" style="margin-top: 20px">
+    <div class="col-sm-1"></div>
+    <div class="col-sm-10" style="border: 1px #000000 solid">
+        <div class="row">
+            <button class="btn btn-primary" ng-click="userAdd()"><span class="glyphicon glyphicon-plus"></span>Add User
+            </button>
+        </div>
+        <div class="row">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>Action</th>
+                    <th>Account</th>
+                    <th>Name</th>
+                    <th>Gender</th>
+                    <th>Age</th>
+                    <th>Status</th>
+                    <th>Orientation</th>
+                </tr>
+                <tr>
+                    <th>
+                        <button class="btn btn-default" ng-click="userResetFilters()">Reset</button>
+                    </th>
+                    <th><select class="form-control" ng-model="testAccountFilter"
+                                ng-options="option.value as option.name for option in [{ name: 'True', value: true }, { name: 'False', value: false }]">
+                        <option value="">All</option>
+                    </select></th>
+                    <th><input type="text" class="form-control" ng-model="userQuery"/></th>
+                    <th><select class="form-control" ng-model="genderFilter"
+                                ng-options="option.value as option.name for option in [{ name: 'Female', value: 'female' }, { name: 'Male', value: 'male' }]">
+                        <option value="">All</option>
+                    </select></th>
+                    <th><select class="form-control" ng-model="ageFilter" ng-options="n for n in [] | range:20:50">
+                        <option value="">All</option>
+                    </select></th>
+                    <th><select class="form-control" ng-model="statusFilter"
+                                ng-options="option.value as option.name for option in [{ name: 'Single', value: 'single' }, { name: 'Relationship', value: 'relationship' }, { name: 'Married', value: 'married' }]">
+                        <option value="">All</option>
+                    </select></th>
+                    <th><select class="form-control" ng-model="orientationFilter"
+                                ng-options="option.value as option.name for option in [{ name: 'Straight', value: 'straight' }, { name: 'Gay', value: 'gay' },{ name: 'Bi', value: 'bi' }]">
+                        <option value="">All</option>
+                    </select></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="user in pagedUsers">
+                    <td style="min-width:130px;">
+                        <!--<button class="btn btn-success btn-xs" ng-click="userShow(bar)"><span-->
+                        <!--ng-class="bar.show ? 'glyphicon glyphicon-check' : 'glyphicon glyphicon-unchecked'"></span>-->
+                        <!--</button>-->
+                        <button class="btn btn-warning btn-xs" ng-click="userEdit(user)"><span
+                                class="glyphicon glyphicon-edit"></span></button>
+                        <button class="btn btn-danger btn-xs" ng-click="userDelete(user)"><span
+                                class="glyphicon glyphicon-remove"></span></button>
+                        <button class="btn btn-info btn-xs" ng-click="userInfo(user)"><span
+                                class="glyphicon glyphicon-info-sign"></span></button>
+
+                    </td>
+                    <td ng-click="userDetails(user)">{{user.testAccount}}</td>
+                    <td ng-click="userDetails(user)">{{user.name}}</td>
+                    <td ng-click="userDetails(user)">{{user.gender}}</td>
+                    <td ng-click="userDetails(user)">{{user.age}}</td>
+                    <td ng-click="userDetails(user)">{{user.status}}</td>
+                    <td ng-click="userDetails(user)">{{user.orientation}}</td>
+                </tr>
+                </tbody>
+
+            </table>
+            <div>
+                <label>Total Items: </label>{{totalItems}}
+            </div>
+            <div>
+                <pagination boundary-links="true" total-items="totalItems" items-per-page="itemsPerPage" max-size="5"
+                            ng-model="currentPage"></pagination>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-1"></div>
+
+</div>
+
+<div ng-show="userAddShow" class="row" style="margin-top: 20px">
+    <div class="col-sm-1"></div>
+    <div class="col-sm-10" style="border: 1px #000000 solid">
+        <div class="row">
+            <div class="col-xs-12">
+                <button ng-click="userList()" class="btn btn-default">Cancel</button>
+                <button ng-click="userAddSave(userAddForm.$valid)" class="btn btn-primary pull-right">Save</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-9">
+                <form class="form-horizontal" role="form" name="userAddForm" novalidate>
+
+                    <p ng-show="userAddForm.name.$invalid && addSubmitted" class="help-block" style="display:block;">
+                        Name is required.</p>
+
+                    <div class="form-group" ng-class="{ 'has-error' : userAddForm.name.$invalid && addSubmitted }">
+                        <label for="name" class="col-sm-2 control-label">Name</label>
+
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="name" name="name" ng-model="add.user.name"
+                                   required>
+                        </div>
+                    </div>
+
+                    <p ng-show="userAddForm.testAccount.$invalid && addSubmitted" class="help-block"
+                       style="display:block;">Test Account is
+                        required.</p>
+
+                    <div class="form-group"
+                         ng-class="{ 'has-error' : userAddForm.testAccount.$invalid && addSubmitted }">
+                        <label for="testAccount" class="col-sm-2 control-label">Test Account</label>
+
+                        <div class="col-sm-10">
+                            <select id="testAccount" class="form-control" name="testAccount"
+                                    ng-model="add.user.testAccount"
+                                    ng-options="option.value as option.name for option in [{ name: 'True', value: true }, { name: 'False', value: false }]"
+                                    ng-change="testAccountChange()" required>
+                            </select>
+                        </div>
+                    </div>
+
+                    <p ng-show="userAddForm.email.$invalid && addSubmitted" class="help-block" style="display:block;">
+                        Email is required.</p>
+
+                    <div ng-show="!add.user.testAccount" class="form-group"
+                         ng-class="{ 'has-error' : userAddForm.email.$invalid && addSubmitted }">
+                        <label for="email" class="col-sm-2 control-label">Email</label>
+
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="email" name="email"
+                                   ng-model="add.user.auth.email"
+                                   ng-required="!add.user.testAccount">
+                        </div>
+                    </div>
+
+                    <p ng-show="userAddForm.accountType.$invalid && addSubmitted" class="help-block"
+                       style="display:block;">Account Type is required.</p>
+
+                    <div ng-show="!add.user.testAccount" class="form-group"
+                         ng-class="{ 'has-error' : userAddForm.accountType.$invalid && addSubmitted }">
+                        <label for="gender" class="col-sm-2 control-label">Account Type</label>
+
+                        <div class="col-sm-10">
+                            <select type="text" name="accountType" class="form-control" id="accountType"
+                                    placeholder="" ng-model="add.user.accountType"
+                                    ng-options="option.value as option.name for option in [{ name: 'Admin', value: 'admin' }, { name: 'Basic', value: 'basic' }, { name : 'Super', value : 'super'}]"
+                                    ng-required="!add.user.testAccount">
+                            </select>
+                        </div>
+                    </div>
+
+                    <p ng-show="userAddForm.gender.$invalid && addSubmitted" class="help-block" style="display:block;">
+                        Gender is required.</p>
+
+                    <div class="form-group" ng-class="{ 'has-error' : userAddForm.gender.$invalid && addSubmitted }">
+                        <label for="gender" class="col-sm-2 control-label">Gender</label>
+
+                        <div class="col-sm-10">
+                            <select type="text" name="gender" class="form-control" id="gender"
+                                    placeholder="" ng-model="add.user.gender"
+                                    ng-options="option.value as option.name for option in [{ name: 'Male', value: 'male' }, { name: 'Female', value: 'female' }]"
+                                    required>
+                            </select>
+                        </div>
+                    </div>
+
+                    <p ng-show="(userAddForm.day.$invalid || userAddForm.month.$invalid || userAddForm.year.$invalid) && addSubmitted"
+                       class="help-block" style="display:block;">Date of Birth is required.</p>
+
+                    <div class="form-group" class="form-group"
+                         ng-class="{ 'has-error' : (userAddForm.day.$invalid || userAddForm.month.$invalid || userAddForm.year.$invalid) && addSubmitted }">
+                        <label for="dob" class="col-sm-2 control-label">Date of Birth</label>
+
+                        <div id="dob" class="col-sm-10">
+                            <select type="text" name="month" class="form-control" id="month" placeholder="12"
+                                    ng-model="add.user.dob.month"
+                                    ng-options="n for n in [] | range:1:13" required>
+                            </select>
+                            <select type="text" name="day" class="form-control" id="day" placeholder="31"
+                                    ng-model="add.user.dob.day"
+                                    ng-options="n for n in [] | range:1:32" required>
+                            </select>
+                            <select type="text" name="year" class="form-control" id="year" placeholder="2014"
+                                    ng-model="add.user.dob.year"
+                                    ng-options="n for n in [] | range:2014:1914" required>
+                            </select>
+                        </div>
+                    </div>
+
+                    <p ng-show="userAddForm.status.$invalid && addSubmitted" class="help-block" style="display:block;">
+                        Status is required.</p>
+
+                    <div class="form-group" ng-class="{ 'has-error' : userAddForm.status.$invalid && addSubmitted }">
+                        <label for="status" class="col-sm-2 control-label">Status</label>
+
+                        <div class="col-sm-10">
+                            <select type="text" name="status" class="form-control" id="status"
+                                    placeholder="" ng-model="add.user.status"
+                                    ng-options="option.value as option.name for option in [{ name: 'Single', value: 'single' }, { name: 'Relationship', value: 'relationship' }, { name: 'Married', value : 'married'}]"
+                                    required>
+                            </select>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="orientation" class="col-sm-2 control-label">Orientation</label>
+
+                        <div class="col-sm-10">
+                            <select type="text" name="orientation" class="form-control" id="orientation"
+                                    placeholder="" ng-model="add.user.orientation"
+                                    ng-options="option.value as option.name for option in [{ name: 'Straight', value: 'straight' }, { name: 'Gay', value: 'gay' }, { name: 'Bi', value : 'bi'}]"
+                                    required>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="tags" class="col-sm-2 control-label">Tags</label>
+
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="tags"
+                                   placeholder="" ng-model="add.user.tags">
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+    <div class="col-sm-1"></div>
+
+</div>
+
+<div ng-show="userEditShow" class="row" style="margin-top: 20px">
+    <div class="col-sm-1"></div>
+    <div class="col-sm-10" style="border: 1px #000000 solid">
+        <div class="row">
+            <div class="col-xs-12">
+                <button ng-click="userList()" class="btn btn-default">Cancel</button>
+                <button ng-click="userEditSave()" class="btn btn-primary pull-right">Save</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-9">
+                <form class="form-horizontal" role="form" name="userEditForm" novalidate>
+
+                    <p ng-show="userEditForm.name.$invalid && editSubmitted" class="help-block" style="display:block;">
+                        Name is required.</p>
+
+                    <div class="form-group" ng-class="{ 'has-error' : userEditForm.name.$invalid && editSubmitted }">
+                        <label for="name" class="col-sm-2 control-label">Name</label>
+
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="name" name="name" ng-model="details.user.name"
+                                   required>
+                        </div>
+                    </div>
+
+                    <p ng-show="userEditForm.testAccount.$invalid && editSubmitted" class="help-block"
+                       style="display:block;">Test Account is
+                        required.</p>
+
+                    <div class="form-group"
+                         ng-class="{ 'has-error' : userEditForm.testAccount.$invalid && editSubmitted }">
+                        <label for="testAccount" class="col-sm-2 control-label">Test Account</label>
+
+                        <div class="col-sm-10">
+                            <select id="testAccount" class="form-control" name="testAccount"
+                                    ng-model="details.user.testAccount"
+                                    ng-options="option.value as option.name for option in [{ name: 'True', value: true }, { name: 'False', value: false }]"
+                                    ng-change="testAccountChange()" required>
+                            </select>
+                        </div>
+                    </div>
+
+                    <p ng-show="userEditForm.email.$invalid && editSubmitted" class="help-block" style="display:block;">
+                        Email is required.</p>
+
+                    <div ng-show="!details.user.testAccount" class="form-group"
+                         ng-class="{ 'has-error' : userEditForm.email.$invalid && editSubmitted }">
+                        <label for="email" class="col-sm-2 control-label">Email</label>
+
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="email" name="email"
+                                   ng-model="details.user.auth.email"
+                                   ng-required="!add.user.testAccount">
+                        </div>
+                    </div>
+
+                    <p ng-show="userEditForm.accountType.$invalid && editSubmitted" class="help-block"
+                       style="display:block;">Account Type is required.</p>
+
+                    <div ng-show="!details.user.testAccount" class="form-group"
+                         ng-class="{ 'has-error' : userEditForm.accountType.$invalid && editSubmitted }">
+                        <label for="gender" class="col-sm-2 control-label">Account Type</label>
+
+                        <div class="col-sm-10">
+                            <select type="text" name="accountType" class="form-control" id="accountType"
+                                    placeholder="" ng-model="details.user.accountType"
+                                    ng-options="option.value as option.name for option in [{ name: 'Admin', value: 'admin' }, { name: 'Basic', value: 'basic' }, { name : 'Super', value : 'super'}]"
+                                    ng-required="!details.user.testAccount">
+                            </select>
+                        </div>
+                    </div>
+
+                    <p ng-show="userEditForm.gender.$invalid && editSubmitted" class="help-block"
+                       style="display:block;">Gender is required.</p>
+
+                    <div class="form-group" ng-class="{ 'has-error' : userEditForm.gender.$invalid && editSubmitted }">
+                        <label for="gender" class="col-sm-2 control-label">Gender</label>
+
+                        <div class="col-sm-10">
+                            <select type="text" name="gender" class="form-control" id="gender"
+                                    placeholder="" ng-model="details.user.gender"
+                                    ng-options="option.value as option.name for option in [{ name: 'Male', value: 'male' }, { name: 'Female', value: 'female' }]"
+                                    required>
+                            </select>
+                        </div>
+                    </div>
+
+                    <p ng-show="(userEditForm.day.$invalid || userEditForm.month.$invalid || userEditForm.year.$invalid) && addSubmitted"
+                       class="help-block" style="display:block;">Date of Birth is required.</p>
+
+                    <div class="form-group" class="form-group"
+                         ng-class="{ 'has-error' : (userEditForm.day.$invalid || userEditForm.month.$invalid || userEditForm.year.$invalid) && addSubmitted }">
+                        <label for="dob" class="col-sm-2 control-label">Date of Birth</label>
+
+                        <div id="dob" class="col-sm-10">
+                            <select type="text" name="month" class="form-control" id="month" placeholder="12"
+                                    ng-model="details.user.dob.month"
+                                    ng-options="n for n in [] | range:1:13" required>
+                            </select>
+                            <select type="text" name="day" class="form-control" id="day" placeholder="31"
+                                    ng-model="details.user.dob.day"
+                                    ng-options="n for n in [] | range:1:32" required>
+                            </select>
+                            <select type="text" name="year" class="form-control" id="year" placeholder="2014"
+                                    ng-model="details.user.dob.year"
+                                    ng-options="n for n in [] | range:2014:1914" required>
+                            </select>
+                        </div>
+                    </div>
+
+                    <p ng-show="userEditForm.status.$invalid && editSubmitted" class="help-block"
+                       style="display:block;">Status is required.</p>
+
+                    <div class="form-group" ng-class="{ 'has-error' : userEditForm.status.$invalid && editSubmitted }">
+                        <label for="status" class="col-sm-2 control-label">Status</label>
+
+                        <div class="col-sm-10">
+                            <select type="text" name="status" class="form-control" id="status"
+                                    placeholder="" ng-model="details.user.status"
+                                    ng-options="option.value as option.name for option in [{ name: 'Single', value: 'single' }, { name: 'Relationship', value: 'relationship' }, { name: 'Married', value : 'married'}]"
+                                    required>
+                            </select>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="orientation" class="col-sm-2 control-label">Orientation</label>
+
+                        <div class="col-sm-10">
+                            <select type="text" name="orientation" class="form-control" id="orientation"
+                                    placeholder="" ng-model="details.user.orientation"
+                                    ng-options="option.value as option.name for option in [{ name: 'Straight', value: 'straight' }, { name: 'Gay', value: 'gay' }, { name: 'Bi', value : 'bi'}]"
+                                    required>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="tags" class="col-sm-2 control-label">Tags</label>
+
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="tags"
+                                   placeholder="" ng-model="details.user.tags">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-1"></div>
+
+</div>
+<div ng-show="userDetailsShow" class="row" style="margin-top: 20px">
+    <div class="col-sm-1"></div>
+    <div class="col-sm-10" style="border: 1px #000000 solid">
+        <div class="row">
+
+            <button ng-click="userList()" class="btn btn-default">Cancel</button>
+            <button class="btn btn-warning pull-right" ng-click="userEdit(details.user)"><span
+                    class="glyphicon glyphicon-edit"></span>Edit
+            </button>
+            <button class="btn btn-danger pull-right" ng-click="userDelete(details.user)"><span
+                    class="glyphicon glyphicon-remove"></span>Delete
+            </button>
+            <button class="btn btn-info pull-right"><span
+                    class="glyphicon glyphicon-info-sign"></span>Info
+            </button>
+        </div>
+        <div class="row">
+            <label class="col-xs-2 control-label">Name</label>
+
+            <div class="col-xs-10">
+                <p class="form-control-static">{{details.user.name}}</p>
+            </div>
+        </div>
+        <div class="row">
+            <label class="col-xs-2 control-label">Test Account</label>
+
+            <div class="col-xs-10">
+                <p class="form-control-static">{{details.user.testAccount}}</p>
+            </div>
+        </div>
+        <div class="row">
+            <label class="col-xs-2 control-label">Gender</label>
+
+            <div class="col-xs-10">
+                <p class="form-control-static">{{details.user.gender}}</p>
+            </div>
+        </div>
+        <div class="row">
+            <label class="col-xs-2 control-label">Age</label>
+
+            <div class="col-xs-10">
+                <p class="form-control-static">{{details.user.age}} -
+                    {{details.user.dob.month}}/{{details.user.dob.day}}/{{details.user.dob.year}}</p>
+            </div>
+        </div>
+        <div class="row">
+            <label class="col-xs-2 control-label">Status</label>
+
+            <div class="col-xs-10">
+                <p class="form-control-static">{{details.user.status}}</p>
+            </div>
+        </div>
+        <div class="row">
+            <label class="col-xs-2 control-label">Orientation</label>
+
+            <div class="col-xs-10">
+                <p class="form-control-static">{{details.user.orientation}}</p>
+            </div>
+        </div>
+        <div class="row">
+            <label class="col-xs-2 control-label">Tags</label>
+
+            <div class="col-xs-10">
+                <p class="form-control-static">{{details.user.tags}}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-1"></div>
+</div>

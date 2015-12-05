@@ -1,0 +1,30 @@
+<div class="col-sm-8">
+    <select class="col-sm-2" ng-model="query['user.gender']" ng-options="option for option in dropdown.gender">
+        <option value="">-- choose gender --</option>
+    </select>
+    <select class="col-sm-2" ng-model="query['user.status']" ng-options="option for option in dropdown.status">
+        <option value="">-- choose status --</option>
+    </select>
+    <select class="col-sm-2" ng-model="query['user.age']" ng-options="option for option in dropdown.age">
+        <option value="">-- choose age --</option>
+    </select>
+    <!--<select class="col-sm-2" ng-model="query['user.orientation']" ng-options="option for option in dropdown.orientation"></select>-->
+    <button ng-click="getColors()">Submit</button>
+</div>
+<div class="col-sm-8">
+    <google-map center="map.center" zoom="map.zoom" draggable='true'>
+
+        <markers id="myMap" models="model" idkey="'mapId'" coords="'bar.location'" events="markersEvents"
+                 doRebuildAll="true">
+            <polygon static="true" ng-repeat="p in polygons track by p.id" path="p.path" stroke="p.stroke" visible="p.visible"
+                     geodesic="p.geodesic" fill="p.fill" fit="false" editable="p.editable" draggable="p.draggable"></polygon>
+        </markers>
+
+
+    </google-map>
+</div>
+<div class="col-sm-4" style="background-color: #f8f8ff;height: 500px">
+    Bar: {{selected.bar.name}}
+    </br>
+    Users: <div ng-repeat="user in selected.users">{{user.name}} </div>
+</div>

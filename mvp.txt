@@ -1,0 +1,7 @@
+-Insert all bars into db [DONE]
+-Map all bars in Manhattan area
+-Check in collection (userid, barid)
+-Aggregate this data per bar (how many people checked into that bar, could be its own collection or i can add it to the bar itself)
+-Map only the bars where people are checked in
+-Change the color of these mappings based on a particular query of the people checked in there
+-Make heat map of areas of the city with certain colors based on people checked into bars in that area
