@@ -15,35 +15,35 @@ module.exports = function (app, db, passport) {
 
     /*******AUTH ********/
 
-//    app.post('/service/login', function (req, res) {
-//        console.log('umbrella :: service :: login');
-//        var email = req.body.email;
-//        var password = req.body.password;
-//        db.users.findOne({ 'auth.email': email }, function (err, user) {
-//            if (err) {
-//                console.log('Error finding the user');
-//                return res.json(500, { message: "Error finding user" });
-//            }
-//            if (!user) {
-//                console.log('No user found with that email');
-//                return res.json(401, { message: "No user found with that email" });
-//            } else {
-//                console.log('Found the user');
-//                if (!bcrypt.compareSync(password, user.auth.local.password)) {
-//                    console.log("Incorrect password");
-//                    return res.json(401, { message: "Incorrect password" });
-//                } else {
-//                    console.log("Authentication passed");
-//                    var token = jwt.encode({
-//                        iss: user._id
-//                    }, app.get('jwtTokenSecret'));
-//                    console.log("Returning a token");
-//                    return res.json(200, { token: token, user: user });
-//                }
-//            }
-//
-//        });
-//    });
+    app.post('/service/login', function (req, res) {
+        console.log('umbrella :: service :: login');
+        var email = req.body.email;
+        var password = req.body.password;
+        db.users.findOne({ 'auth.email': email }, function (err, user) {
+            if (err) {
+                console.log('Error finding the user');
+                return res.json(500, { message: "Error finding user" });
+            }
+            if (!user) {
+                console.log('No user found with that email');
+                return res.json(401, { message: "No user found with that email" });
+            } else {
+                console.log('Found the user');
+                if (!bcrypt.compareSync(password, user.auth.local.password)) {
+                    console.log("Incorrect password");
+                    return res.json(401, { message: "Incorrect password" });
+                } else {
+                    console.log("Authentication passed");
+                    var token = jwt.encode({
+                        iss: user._id
+                    }, app.get('jwtTokenSecret'));
+                    console.log("Returning a token");
+                    return res.json(200, { token: token, user: user });
+                }
+            }
+
+        });
+    });
 
 //    app.post('/service/login-facebook', passport.authenticate('facebook-token', {session: false}),
 //        function (req, res) {
@@ -408,66 +408,66 @@ module.exports = function (app, db, passport) {
         }
     });
 
-//    app.get('/service/resetPassword/:id', jwtauth.auth, function (req, res) {
-//        console.log('umbrella :: service :: resetPassword - id=' + req.params.id);
-//        db.users.findOne({_id: mongojs.ObjectId(req.params.id)}, function (err, user) {
-//            if (err || !user) {
-//                console.log('No user found');
-//                return res.send("No user found");
-//            } else {
-//                console.log('Found a user');
-//                if (user.auth && user.auth.local && user.auth.local.password) {
-//                    var randomPassword = passwordGen.generate(8);
-//                    //todo: send this password to the user
-//                    console.log(randomPassword);
-//                    user.auth.local.password = bcrypt.hashSync(randomPassword, bcrypt.genSaltSync(8), null);
-//                    db.users.save(user, function (err, user) {
-//                        if (err) {
-//                            console.log("Issue updating the user with the new password");
-//                            return res.send(500, "Error updating user");
-//                        } else {
-//                            console.log("Password reset successfully");
-//                            return res.send(user);
-//                        }
-//                    });
-//                } else {
-//                    console.log("Account has no password");
-//                    return res.send("Account has no password");
-//                }
-//            }
-//        });
-//    });
-//
-//    app.post('/service/changePassword', jwtauth.auth, function (req, res) {
-//        console.log('umbrella :: service :: changePassword');
-//        var currentUser = req.user;
-//        var password = req.body;
-//        if (!bcrypt.compareSync(password.old, currentUser.auth.local.password)) {
-//            console.log("incorrect old password, cant change password");
-//            return res.json(401, { message: "Incorrect password" });
-//        } else {
-//            console.log("old password valid");
-//            if (password.new === password.re) {
-//                currentUser.auth.local.password = bcrypt.hashSync(password.new, bcrypt.genSaltSync(8), null);
-//                db.users.save(currentUser, function (err, user) {
-//                    if (err) {
-//                        console.log("issue saving use with new password");
-//                        return res.send(500, "Error updating user");
-//                    } else {
-//                        console.log("saved user with new password");
-//                        var token = jwt.encode({
-//                            iss: user._id
-//                        }, app.get('jwtTokenSecret'));
-//                        console.log("generating a new token");
-//                        //todo: token needs to include auth info
-//                        return res.json(200, { token: token, user: user });
-//                    }
-//                });
-//            }
-//
-//        }
-//
-//    });
+    app.get('/service/resetPassword/:id', jwtauth.auth, function (req, res) {
+        console.log('umbrella :: service :: resetPassword - id=' + req.params.id);
+        db.users.findOne({_id: mongojs.ObjectId(req.params.id)}, function (err, user) {
+            if (err || !user) {
+                console.log('No user found');
+                return res.send("No user found");
+            } else {
+                console.log('Found a user');
+                if (user.auth && user.auth.local && user.auth.local.password) {
+                    var randomPassword = passwordGen.generate(8);
+                    //todo: send this password to the user
+                    console.log(randomPassword);
+                    user.auth.local.password = bcrypt.hashSync(randomPassword, bcrypt.genSaltSync(8), null);
+                    db.users.save(user, function (err, user) {
+                        if (err) {
+                            console.log("Issue updating the user with the new password");
+                            return res.send(500, "Error updating user");
+                        } else {
+                            console.log("Password reset successfully");
+                            return res.send(user);
+                        }
+                    });
+                } else {
+                    console.log("Account has no password");
+                    return res.send("Account has no password");
+                }
+            }
+        });
+    });
+
+    app.post('/service/changePassword', jwtauth.auth, function (req, res) {
+        console.log('umbrella :: service :: changePassword');
+        var currentUser = req.user;
+        var password = req.body;
+        if (!bcrypt.compareSync(password.old, currentUser.auth.local.password)) {
+            console.log("incorrect old password, cant change password");
+            return res.json(401, { message: "Incorrect password" });
+        } else {
+            console.log("old password valid");
+            if (password.new === password.re) {
+                currentUser.auth.local.password = bcrypt.hashSync(password.new, bcrypt.genSaltSync(8), null);
+                db.users.save(currentUser, function (err, user) {
+                    if (err) {
+                        console.log("issue saving use with new password");
+                        return res.send(500, "Error updating user");
+                    } else {
+                        console.log("saved user with new password");
+                        var token = jwt.encode({
+                            iss: user._id
+                        }, app.get('jwtTokenSecret'));
+                        console.log("generating a new token");
+                        //todo: token needs to include auth info
+                        return res.json(200, { token: token, user: user });
+                    }
+                });
+            }
+
+        }
+
+    });
 
     /******* UMBRELLA.BAR SERVICES ******/
         //get all bars
@@ -497,7 +497,7 @@ module.exports = function (app, db, passport) {
     });
 
     //add a bar
-    app.post('/service/bars', function (req, res) {
+    app.post('/service/bars', jwtauth.auth, function (req, res) {
         console.log("umbrella :: service :: addBar");
         var barObj = req.body;
         barObj.neighborhood.id = mongojs.ObjectId(barObj.neighborhood.id);
@@ -511,7 +511,7 @@ module.exports = function (app, db, passport) {
     });
 
     //delete a bar
-    app.delete('/service/bars/:id', function (req, res) {
+    app.delete('/service/bars/:id', jwtauth.auth, function (req, res) {
         console.log("umbrella :: service :: deleteBar id=" + req.params.id);
         db.bars.remove({_id: mongojs.ObjectId(req.params.id)}, function (err, bar) {
             if (err || !bar) {
@@ -523,7 +523,7 @@ module.exports = function (app, db, passport) {
     });
 
     //update a bar
-    app.put('/service/bars/:id', function (req, res) {
+    app.put('/service/bars/:id', jwtauth.auth, function (req, res) {
         console.log("umbrella :: service :: updateBar id=" + req.params.id);
         var item = req.body;
         item._id = mongojs.ObjectId(req.params.id)
@@ -580,7 +580,7 @@ module.exports = function (app, db, passport) {
     });
 
     //add a category
-    app.post('/service/categories', function (req, res) {
+    app.post('/service/categories', jwtauth.auth, function (req, res) {
         console.log("umbrella :: service :: addCategory");
         db.categories.insert(req.body, function (err, cat) {
             if (err) {
@@ -592,7 +592,7 @@ module.exports = function (app, db, passport) {
     });
 
     //delete a category
-    app.delete('/service/categories/:id', function (req, res) {
+    app.delete('/service/categories/:id', jwtauth.auth, function (req, res) {
         console.log("umbrella :: service :: deleteCategory id=" + req.params.id);
         db.categories.remove({_id: mongojs.ObjectId(req.params.id)}, function (err, cat) {
             if (err || !cat) {
@@ -604,7 +604,7 @@ module.exports = function (app, db, passport) {
     });
 
     //update a category
-    app.put('/service/categories/:id', function (req, res) {
+    app.put('/service/categories/:id', jwtauth.auth,  function (req, res) {
         console.log("umbrella :: service :: updateCategory id=" + req.params.id);
         var item = req.body;
         item._id = mongojs.ObjectId(req.params.id)
@@ -647,7 +647,7 @@ module.exports = function (app, db, passport) {
     });
 
     //add a user
-    app.post('/service/users', function (req, res) {
+    app.post('/service/users',jwtauth.auth,  function (req, res) {
         console.log("umbrella :: service :: addUser");
         var userObj = req.body;
         if (userObj.auth && !userObj.testAccount) {
@@ -705,7 +705,7 @@ module.exports = function (app, db, passport) {
     });
 
     //delete a user
-    app.delete('/service/users/:id', function (req, res) {
+    app.delete('/service/users/:id', jwtauth.auth, function (req, res) {
         console.log("umbrella :: service :: deleteUser id=" + req.params.id);
         db.users.remove({_id: mongojs.ObjectId(req.params.id)}, function (err, user) {
             if (err || !user) {
@@ -717,7 +717,7 @@ module.exports = function (app, db, passport) {
     });
 
     //update a user
-    app.put('/service/users/:id', function (req, res) {
+    app.put('/service/users/:id', jwtauth.auth, function (req, res) {
         console.log("umbrella :: service :: updateUser id=" + req.params.id);
         db.users.findOne({_id: mongojs.ObjectId(req.params.id)}, function (err, user) {
             if (!err) {
@@ -842,7 +842,7 @@ module.exports = function (app, db, passport) {
     });
 
     //add a checkin
-    app.post('/service/checkins', function (req, res) {
+    app.post('/service/checkins', jwtauth.auth, function (req, res) {
         console.log("umbrella :: service :: addCheckin");
         var nCheckin = req.body;
         nCheckin.datetime = new Date(nCheckin.datetime);
@@ -856,7 +856,7 @@ module.exports = function (app, db, passport) {
     });
 
     //delete a checkin
-    app.delete('/service/checkins/:id', function (req, res) {
+    app.delete('/service/checkins/:id', jwtauth.auth, function (req, res) {
         console.log("umbrella :: service :: deleteCheckin id=" + req.params.id);
         db.checkins.remove({_id: mongojs.ObjectId(req.params.id)}, function (err, checkin) {
             if (err || !checkin) {
@@ -868,7 +868,7 @@ module.exports = function (app, db, passport) {
     });
 
     //update a checkin
-    app.put('/service/checkins/:id', function (req, res) {
+    app.put('/service/checkins/:id', jwtauth.auth, function (req, res) {
         console.log("umbrella :: service :: updateCheckin id=" + req.params.id);
         var item = req.body;
         item._id = mongojs.ObjectId(req.params.id)
